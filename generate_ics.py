@@ -111,6 +111,10 @@ def build_bond_event(bond):
     if dt_start < today:
         return None
 
+    # 计算结束日期（次日）
+    start_date = datetime.strptime(dt_start, "%Y%m%d")
+    end_date = (start_date + timedelta(days=1)).strftime("%Y%m%d")
+
     uid = make_uid("bond", code, dt_start)
     summary = f"🪙 {name}({code}) 申购"
     desc_parts = [f"名称: {name}", f"代码: {code}"]
@@ -128,12 +132,11 @@ def build_bond_event(bond):
         f"UID:{uid}@ipo-bond-calendar",
         f"DTSTAMP:{datetime.utcnow().strftime('%Y%m%dT%H%M%SZ')}",
         f"DTSTART;VALUE=DATE:{dt_start}",
-        f"DTEND;VALUE=DATE:{dt_start}",
+        f"DTEND;VALUE=DATE:{end_date}",
         f"SUMMARY:{escape_ics(summary)}",
         f"DESCRIPTION:{escape_ics(description)}",
         "TRANSP:TRANSPARENT",
         "BEGIN:VALARM",
-        "TRIGGER;VALUE=DATE-TIME:20260101T080000Z",  # 占位，实际用 P0D
         "TRIGGER:-PT9H",
         "ACTION:DISPLAY",
         f"DESCRIPTION:{escape_ics(summary)}",
@@ -141,14 +144,7 @@ def build_bond_event(bond):
         "END:VEVENT",
     ]
 
-    # 修正 VALARM：去掉占位行
-    cleaned = []
-    for line in lines:
-        if line.startswith("TRIGGER;VALUE=DATE-TIME"):
-            continue
-        cleaned.append(line)
-
-    return "\r\n".join(cleaned)
+    return "\r\n".join(lines)
 
 
 def build_stock_event(stock):
@@ -169,6 +165,10 @@ def build_stock_event(stock):
     today = datetime.now().strftime("%Y%m%d")
     if dt_start < today:
         return None
+
+    # 计算结束日期（次日）
+    start_date = datetime.strptime(dt_start, "%Y%m%d")
+    end_date = (start_date + timedelta(days=1)).strftime("%Y%m%d")
 
     uid = make_uid("stock", code, dt_start)
     summary = f"📈 {name}({code}) 新股申购"
@@ -192,7 +192,7 @@ def build_stock_event(stock):
         f"UID:{uid}@ipo-bond-calendar",
         f"DTSTAMP:{datetime.utcnow().strftime('%Y%m%dT%H%M%SZ')}",
         f"DTSTART;VALUE=DATE:{dt_start}",
-        f"DTEND;VALUE=DATE:{dt_start}",
+        f"DTEND;VALUE=DATE:{end_date}",
         f"SUMMARY:{escape_ics(summary)}",
         f"DESCRIPTION:{escape_ics(description)}",
         "TRANSP:TRANSPARENT",
