@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A股打新日历</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f172a; color: #e2e8f0;
+            min-height: 100vh; display: flex;
+            align-items: center; justify-content: center;
+            padding: 20px;
+        }
+        .card {
+            background: #1e293b; border-radius: 16px;
+            padding: 40px; max-width: 520px; width: 100%;
+            text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 { font-size: 24px; margin-bottom: 8px; }
+        .subtitle { color: #94a3b8; margin-bottom: 24px; font-size: 14px; }
+        .ics-url {
+            background: #0f172a; border: 1px solid #334155;
+            border-radius: 8px; padding: 12px 16px;
+            font-family: monospace; font-size: 13px;
+            word-break: break-all; text-align: left;
+            color: #38bdf8; margin-bottom: 20px;
+        }
+        .btn {
+            display: inline-block; padding: 12px 28px;
+            border-radius: 8px; font-size: 15px;
+            text-decoration: none; font-weight: 600;
+            transition: transform 0.1s, box-shadow 0.1s;
+            margin: 6px;
+        }
+        .btn:hover { transform: translateY(-1px); }
+        .btn-primary {
+            background: #3b82f6; color: white;
+            box-shadow: 0 4px 14px rgba(59,130,246,0.4);
+        }
+        .btn-secondary {
+            background: #1e293b; color: #e2e8f0;
+            border: 1px solid #475569;
+        }
+        .instructions {
+            text-align: left; margin-top: 28px;
+            padding-top: 24px; border-top: 1px solid #334155;
+        }
+        .instructions h3 { font-size: 14px; color: #94a3b8; margin-bottom: 12px; }
+        .instructions details { margin-bottom: 10px; }
+        .instructions summary {
+            cursor: pointer; font-size: 14px;
+            color: #38bdf8; padding: 4px 0;
+        }
+        .instructions p {
+            font-size: 13px; color: #cbd5e1;
+            margin: 6px 0 6px 16px; line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>📅 A股打新日历</h1>
+        <p class="subtitle">新股 + 可转债申购提醒，每日自动更新</p>
+
+        <div class="ics-url" id="icsUrl">加载中...</div>
+
+        <div>
+            <a class="btn btn-primary" id="subscribeBtn" href="#">📱 订阅到日历</a>
+            <a class="btn btn-secondary" id="downloadBtn" href="#">⬇️ 下载 ICS</a>
+        </div>
+
+        <div class="instructions">
+            <h3>如何订阅？</h3>
+            <details>
+                <summary>Apple Calendar (iPhone / Mac)</summary>
+                <p>复制上方链接 → 打开日历 App → 底部「日历」→「添加日历」→「添加订阅日历」→ 粘贴链接</p>
+            </details>
+            <details>
+                <summary>Google Calendar</summary>
+                <p>左侧「其他日历」→「从 URL」→ 粘贴链接 → 添加日历</p>
+            </details>
+            <details>
+                <summary>Outlook</summary>
+                <p>「添加日历」→「从网页订阅」→ 粘贴链接</p>
+            </details>
+            <details>
+                <summary>Android</summary>
+                <p>安装 ICSx⁵ (开源免费) → 添加订阅 → 粘贴链接</p>
+            </details>
+        </div>
+    </div>
+
+    <script>
+        const baseUrl = window.location.origin + window.location.pathname.replace('/index.html', '');
+        const icsUrl = baseUrl + '/ipo_bond_calendar.ics';
+        document.getElementById('icsUrl').textContent = icsUrl;
+        document.getElementById('subscribeBtn').href = 'webcal://' + icsUrl.replace('https://', '');
+        document.getElementById('downloadBtn').href = icsUrl;
+    </script>
+</body>
+</html>
