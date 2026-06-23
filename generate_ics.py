@@ -33,8 +33,21 @@ def fetch_bonds(page_size=100):
     headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
     try:
         resp = requests.get(url, params=params, headers=headers, timeout=15)
-        json_text = re.search(r"jQuery\d+_\d+\((.*)\)", resp.text).group(1)
-        data = json.loads(json_text)
+        resp.raise_for_status()
+        
+        # 尝试新格式：直接 JSON
+        try:
+            data = resp.json()
+        except json.JSONDecodeError:
+            # 尝试旧格式：jQuery 回调
+            match = re.search(r"jQuery\d+_\d+\((.*)\)", resp.text)
+            if match:
+                json_text = match.group(1)
+                data = json.loads(json_text)
+            else:
+                print(f"[DEBUG] 响应格式未识别，原文前500字：{resp.text[:500]}")
+                return []
+        
         if "result" in data and "data" in data["result"]:
             return data["result"]["data"]
     except Exception as e:
@@ -58,8 +71,21 @@ def fetch_stocks(page_size=100):
     headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
     try:
         resp = requests.get(url, params=params, headers=headers, timeout=15)
-        json_text = re.search(r"jQuery\d+_\d+\((.*)\)", resp.text).group(1)
-        data = json.loads(json_text)
+        resp.raise_for_status()
+        
+        # 尝试新格式：直接 JSON
+        try:
+            data = resp.json()
+        except json.JSONDecodeError:
+            # 尝试旧格式：jQuery 回调
+            match = re.search(r"jQuery\d+_\d+\((.*)\)", resp.text)
+            if match:
+                json_text = match.group(1)
+                data = json.loads(json_text)
+            else:
+                print(f"[DEBUG] 响应格式未识别，原文前500字：{resp.text[:500]}")
+                return []
+        
         if "result" in data and "data" in data["result"]:
             return data["result"]["data"]
     except Exception as e:
