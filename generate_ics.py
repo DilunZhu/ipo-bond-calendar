@@ -48,7 +48,7 @@ def fetch_bonds(page_size=100):
                 print(f"[DEBUG] 响应格式未识别，原文前500字：{resp.text[:500]}")
                 return []
         
-        if "result" in data and "data" in data["result"]:
+        if "result" in data and data["result"] is not None and "data" in data["result"]:
             return data["result"]["data"]
     except Exception as e:
         print(f"[WARN] 获取可转债数据失败: {e}")
@@ -86,7 +86,7 @@ def fetch_stocks(page_size=100):
                 print(f"[DEBUG] 响应格式未识别，原文前500字：{resp.text[:500]}")
                 return []
         
-        if "result" in data and "data" in data["result"]:
+        if "result" in data and data["result"] is not None and "data" in data["result"]:
             return data["result"]["data"]
     except Exception as e:
         print(f"[WARN] 获取新股数据失败: {e}")
