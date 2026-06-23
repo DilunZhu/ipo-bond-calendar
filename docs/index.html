@@ -93,7 +93,7 @@
     </div>
 
     <script>
-        const baseUrl = window.location.origin + window.location.pathname.replace('/index.html', '');
+        const baseUrl = (window.location.origin + window.location.pathname.replace('/index.html', '')).replace(/\/+$/, '');
         const icsUrl = baseUrl + '/ipo_bond_calendar.ics';
         document.getElementById('icsUrl').textContent = icsUrl;
         document.getElementById('subscribeBtn').href = 'webcal://' + icsUrl.replace('https://', '');
